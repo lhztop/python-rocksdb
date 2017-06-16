@@ -579,6 +579,7 @@ cdef class BlockBasedTableFactory(PyTableFactory):
             block_size=None,
             block_size_deviation=None,
             block_restart_interval=None,
+            cache_index_and_filter_blocks=True,
             whole_key_filtering=None):
 
         cdef table_factory.BlockBasedTableOptions table_options
