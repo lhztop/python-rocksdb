@@ -13,20 +13,26 @@ else:
 mod1 = Extension(
     'rocksdb._rocksdb',
     sources,
+    include_dirs = ['D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/include', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/options'],
+    library_dirs = ['D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/msvc14/Release', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/Snappy.Library/bin/retail/amd64', 
+    'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/LZ4.Library/bin/retail/amd64', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/ZLIB.Library/bin/retail/amd64',
+    'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/Gflags.Library/bin/retail/amd64'],
     extra_compile_args=[
         '-std=c++11',
         '-O3',
         '-Wall',
-        '-Wextra',
-        '-Wconversion',
+        # '-Wextra',
+        # '-Wconversion',
         '-fno-strict-aliasing'
     ],
     language='c++',
     libraries=[
-        'rocksdb',
+        'rocksdblib',
         'snappy',
-        'bz2',
-        'z'
+        'lz4',
+        'zlib',
+        'gflags',
+        'Rpcrt4'
     ]
 )
 

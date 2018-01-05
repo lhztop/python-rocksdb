@@ -5,6 +5,20 @@ from std_memory cimport shared_ptr
 from cache cimport Cache
 from filter_policy cimport FilterPolicy
 
+
+cdef extern from "rocksdb/table_properties.h" namespace "rocksdb::TablePropertiesCollectorFactory":
+    cdef struct Context:
+        uint32_t column_family_id
+
+cdef extern from "rocksdb/table_properties.h" namespace "rocksdb":
+    cdef cppclass TablePropertiesCollector:
+         char* Name() const
+
+    cdef cppclass TablePropertiesCollectorFactory:
+        TablePropertiesCollector* CreateTablePropertiesCollector(
+            Context context) nogil except+
+        char* Name() const
+
 cdef extern from "rocksdb/table.h" namespace "rocksdb":
     cdef cppclass TableFactory:
         TableFactory()
@@ -27,6 +41,7 @@ cdef extern from "rocksdb/table.h" namespace "rocksdb":
         int block_size_deviation
         int block_restart_interval
         cpp_bool whole_key_filtering
+        cpp_bool cache_index_and_filter_blocks
         shared_ptr[Cache] block_cache
         shared_ptr[Cache] block_cache_compressed
         shared_ptr[FilterPolicy] filter_policy
