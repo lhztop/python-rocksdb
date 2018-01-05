@@ -90,6 +90,7 @@ class TestOptions(unittest.TestCase):
         rocksdb.BlockBasedTableFactory(
             block_size=4096,
             filter_policy=TestFilterPolicy(),
+            cache_index_and_filter_blocks=True,
             block_cache=rocksdb.LRUCache(100))
 
     def test_unicode_path(self):
