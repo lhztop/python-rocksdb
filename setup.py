@@ -1,55 +1,46 @@
+import platform
 from setuptools import setup
 from setuptools import find_packages
-from distutils.extension import Extension
+from setuptools import Extension
 
-try:
-    from Cython.Build import cythonize
-except ImportError:
-    def cythonize(extensions): return extensions
-    sources = ['rocksdb/_rocksdb.cpp']
-else:
-    sources = ['rocksdb/_rocksdb.pyx']
 
-mod1 = Extension(
-    'rocksdb._rocksdb',
-    sources,
-    include_dirs = ['D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/include', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/options'],
-    library_dirs = ['D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/msvc14/Release', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/Snappy.Library/bin/retail/amd64', 
-    'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/LZ4.Library/bin/retail/amd64', 'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/ZLIB.Library/bin/retail/amd64',
-    'D:/lhz/proj/xd/dev/cpp/rocksdb-5.4.6/third-party/Gflags.Library/bin/retail/amd64'],
-    extra_compile_args=[
-        '-std=c++11',
-        '-O3',
-        '-Wall',
-        # '-Wextra',
-        # '-Wconversion',
-        '-fno-strict-aliasing'
-    ],
-    language='c++',
-    libraries=[
-        'rocksdblib',
-        'snappy',
-        'lz4',
-        'zlib',
-        'gflags',
-        'Rpcrt4'
-    ]
-)
+extra_compile_args = [
+    '-std=c++11',
+    '-O3',
+    '-Wall',
+    '-Wextra',
+    '-Wconversion',
+    '-fno-strict-aliasing',
+    '-fno-rtti',
+]
+
+if platform.system() == 'Darwin':
+    extra_compile_args += ['-mmacosx-version-min=10.7', '-stdlib=libc++']
+
 
 setup(
     name="python-rocksdb",
-    version='0.6.6',
+    version='0.6.8',
     description="Python bindings for RocksDB",
     keywords='rocksdb',
     author='Ming Hsuan Tu',
-    author_email="Use the github issues",
+    author_email="qrnnis2623891@gmail.com",
     url="https://github.com/twmht/python-rocksdb",
     license='BSD License',
-    install_requires=['setuptools'],
+    setup_requires=['setuptools>=25', 'Cython>=0.20'],
+    install_requires=['setuptools>=25'],
     package_dir={'rocksdb': 'rocksdb'},
     packages=find_packages('.'),
-    ext_modules=cythonize([mod1]),
-    setup_requires=['pytest-runner'],
-    tests_require=['pytest'],
+    ext_modules=[Extension(
+        'rocksdb._rocksdb',
+        ['rocksdb/_rocksdb.pyx'],
+        extra_compile_args=extra_compile_args,
+        language='c++',
+        libraries=['rocksdb', 'snappy', 'bz2', 'z', 'lz4'],
+    )],
+    extras_require={
+        "doc": ['sphinx_rtd_theme', 'sphinx'],
+        "test": ['pytest'],
+    },
     include_package_data=True
 )

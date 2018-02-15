@@ -1,5 +1,5 @@
 Basic Usage of python-rocksdb
-************************
+*****************************
 
 Open
 ====
@@ -32,7 +32,7 @@ It assings a cache of 2.5G, uses a bloom filter for faster lookups and keeps
 more data (64 MB) in memory before writting a .sst file.
 
 About Bytes And Unicode
-========================
+=======================
 
 RocksDB stores all data as uninterpreted *byte strings*.
 pyrocksdb behaves the same and uses nearly everywhere byte strings too.
@@ -338,6 +338,7 @@ In this example all keys have a static prefix of len 5. ::
 
     opts = rocksdb.Options()
     opts.prefix_extractor = StaticPrefix()
+    opts.allow_concurrent_memtable_write = False
     opts.memtable_factory = rocksdb.HashSkipListMemtableFactory()
     opts.create_if_missing = True
 
@@ -349,6 +350,7 @@ In this example all keys have a static prefix of len 5. ::
 For initial bulk loads the Vector-MemtableFactory makes sense. ::
 
     opts = rocksdb.Options()
+    opts.allow_concurrent_memtable_write = False
     opts.memtable_factory = rocksdb.VectorMemtableFactory()
     opts.create_if_missing = True
 
